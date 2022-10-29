@@ -7,7 +7,7 @@ import { config } from "../utils/configApi";
 export default function Game({ words }) {
   let score = 0;
   const [userTypes, setUserTypes] = useState("");
-  const [time, setTime] = useState(20);
+  const [time, setTime] = useState(60);
   const [name, setName] = useState("");
   const [over, setOver] = useState(false);
   const [load, setLoad] = useState(true);
