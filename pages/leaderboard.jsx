@@ -42,7 +42,10 @@ export default function Leaderboard() {
         <div className="font-bold">score</div>
       </div>
       {currentList.map((player, i) => (
-        <div className="mt-3 flex text-center items-center bg-slate-100 rounded-lg w-[90%] m-auto">
+        <div
+          key={i}
+          className="mt-3 flex text-center items-center bg-slate-100 rounded-lg w-[90%] m-auto"
+        >
           <div className="font-bold w-[20%]">#{i + 1 + page * 10}</div>
           <div className="font-bold w-[50%]">{player.name}</div>
           <div className="font-bold">{player.score}</div>

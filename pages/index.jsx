@@ -59,10 +59,9 @@ export default function Home() {
                 />
                 <button
                   onClick={handleSubmit}
-                  disabled={loading}
                   className="ml-4 cursor-pointer rounded-lg p-3 bg-slate-900 text-lg font-semibold text-white"
                 >
-                  start the game!
+                  {loading ? "loading ..." : "start the game!"}
                 </button>
               </div>
             ) : (
@@ -91,6 +90,7 @@ export default function Home() {
             </span>
           </div>
           <Image
+            alt="fastype"
             src={keyboard}
             width="300"
             height="300"
