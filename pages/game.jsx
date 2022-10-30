@@ -1,6 +1,8 @@
 import axios from "axios";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { BiWorld } from "react-icons/bi";
 import { getWords } from "../logic/chars";
 import { config } from "../utils/configApi";
 
@@ -11,7 +13,16 @@ export default function Game({ words }) {
   const [name, setName] = useState("");
   const [over, setOver] = useState(false);
   const [load, setLoad] = useState(true);
+  const [progressBar, setProgressBar] = useState(0);
   const router = useRouter();
+
+  const changeProgress = (n) => {
+    setInterval(() => {
+      setProgressBar((prevProgress) =>
+        prevProgress < n ? prevProgress + 1 : prevProgress
+      );
+    }, 50);
+  };
 
   const finish = async (s) => {
     try {
@@ -24,6 +35,7 @@ export default function Game({ words }) {
         config
       );
       setOver(data);
+      changeProgress(data.percent);
     } catch (error) {}
   };
 
@@ -44,13 +56,22 @@ export default function Game({ words }) {
     setName(n);
   }, []);
 
+  const preventCopyPaste = (e) => {
+    e.preventDefault();
+    alert("Copying and pasting is not allowed!");
+  };
+
   return (
     <div className="w-full flex-col items-center h-[100vh] bg-slate-100">
       <div className="flex items-center justify-between p-10">
         <div className="rounded-full bg-white p-3">
           <span className="font-bold"> {name}</span>
         </div>
-        <div className="rounded-full bg-green-600 text-white p-3">
+        <div
+          className={`rounded-full ${
+            time < 20 ? "bg-red-600" : "bg-green-600"
+          }  text-white p-3`}
+        >
           time:
           <span className="font-bold"> {time}</span>
         </div>
@@ -62,7 +83,7 @@ export default function Game({ words }) {
           </div>
           <div className="text-center">hint: dont forget the spaces</div>
           <div className="flex items-center justify-center mt-3">
-            <div className="rounded-lg bg-white p-3 w-[80%]">
+            <div className="rounded-lg text-[20px] bg-white p-3 w-[80%]">
               {words.split("").map((char, i) => {
                 let con;
                 if (i >= userTypes.length) {
@@ -94,6 +115,9 @@ export default function Game({ words }) {
             <input
               type="text"
               autoFocus
+              onCopy={(e) => preventCopyPaste(e)}
+              onPaste={(e) => preventCopyPaste(e)}
+              onCut={(e) => preventCopyPaste(e)}
               placeholder="click here to open your keyboard"
               className="text-white w-[50%] mt-3 p-2"
               onChange={(e) => {
@@ -103,12 +127,35 @@ export default function Game({ words }) {
           </div>
         </div>
       ) : (
-        <div>
+        <div className="mt-10 rounded-lg p-6 h-[60%]">
           <div className="text-[25px] font-bold text-center">
             you got {over.score} points
           </div>
-          <div className="text-[25px] font-bold text-center">
-            you are higher than {over.percent} % form others
+          <div className="w-[80%] mt-10 m-auto bg-gray-200 rounded-full dark:bg-gray-700">
+            <div
+              className="bg-slate-900 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full"
+              style={{ width: `${progressBar}%` }}
+            >
+              {progressBar}%
+            </div>
+          </div>
+          <div className="text-[25px] mt-10 font-bold text-center">
+            you are higher than <br /> {progressBar}% form others{" "}
+            <BiWorld className="inline" />
+          </div>
+          <div className="flex items-center justify-center w-full">
+            <Link
+              href={"/"}
+              className="cursor-pointer m-10 rounded-lg p-3 bg-slate-900 text-lg font-semibold text-white"
+            >
+              play again!
+            </Link>
+            <Link
+              href={"/leaderboard"}
+              className="cursor-pointer m-10 rounded-lg p-3 bg-green-600 text-lg font-semibold text-white"
+            >
+              see leaderboard <BiWorld className="inline" />
+            </Link>
           </div>
         </div>
       )}
@@ -117,7 +164,7 @@ export default function Game({ words }) {
 }
 
 export async function getServerSideProps() {
-  let words = getWords(500);
+  let words = getWords(50);
   return {
     props: { words },
   };

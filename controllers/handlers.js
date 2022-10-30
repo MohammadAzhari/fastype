@@ -22,6 +22,6 @@ export const addPlayer = async (req, res) => {
 };
 
 export const leaderboard = async (req, res) => {
-  let players = await PlayersModel.find().sort({ score: 1 });
+  let players = await PlayersModel.find();
   res.send(players);
 };

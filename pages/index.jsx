@@ -3,13 +3,19 @@ import keyboard from "../public/keyboard-icon-vector-sign-symbol-isolated-white-
 import Typewriter from "typewriter-effect";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import Navbar from "../components/Navbar";
+import Link from "next/link";
+import { BiWorld } from "react-icons/bi";
+import { AiOutlineCopyright, AiOutlineFire } from "react-icons/ai";
 
 export default function Home() {
   const [expand, setExpand] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [name, setName] = useState("");
   const router = useRouter();
   const handleSubmit = () => {
     if (name !== "") {
+      setLoading(true);
       window.localStorage.setItem("name", name);
       router.push("/game");
     } else {
@@ -24,13 +30,7 @@ export default function Home() {
 
   return (
     <div>
-      <div className="flex items-center justify-between m-5">
-        <div className="font-bold text-lg">Fastype</div>
-        <select className="bg-slate-100 cursor-pointer p-2 rounded-lg focus:outline-none">
-          <option>English</option>
-          <option>Arabic</option>
-        </select>
-      </div>
+      <Navbar />
       <div className="bg-slate-100 h-[85vh]">
         <div className="w-full flex flex-col items-center justify-between h-full relative">
           <div className="font-bold m-9 h-[20%] text-[40px]">
@@ -59,22 +59,36 @@ export default function Home() {
                 />
                 <button
                   onClick={handleSubmit}
+                  disabled={loading}
                   className="ml-4 cursor-pointer rounded-lg p-3 bg-slate-900 text-lg font-semibold text-white"
                 >
                   start the game!
                 </button>
               </div>
             ) : (
-              <button
-                onClick={() => setExpand(true)}
-                className="cursor-pointer rounded-lg p-3 bg-slate-900 text-lg font-semibold text-white"
-              >
-                play now!
-              </button>
+              <div className="flex flex-col items-center">
+                <button
+                  onClick={() => setExpand(true)}
+                  className="cursor-pointer rounded-lg p-3 bg-slate-900 text-lg font-semibold text-white"
+                >
+                  play now! <AiOutlineFire className="inline" />
+                </button>
+                <div className="mt-10">
+                  <Link
+                    href={"/leaderboard"}
+                    className="cursor-pointer m-10 rounded-lg p-3 bg-green-600 text-lg font-semibold text-white"
+                  >
+                    see leaderboard <BiWorld className="inline" />
+                  </Link>
+                </div>
+              </div>
             )}
           </div>
           <div>
-            made by <span className="font-bold">@mohammad azhari</span>
+            made by{" "}
+            <span className="font-bold">
+              <AiOutlineCopyright className="inline" /> mohammad azhari
+            </span>
           </div>
           <Image
             src={keyboard}
