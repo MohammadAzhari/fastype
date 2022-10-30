@@ -118,7 +118,7 @@ export default function Game({ words }) {
               onCopy={(e) => preventCopyPaste(e)}
               onPaste={(e) => preventCopyPaste(e)}
               onCut={(e) => preventCopyPaste(e)}
-              placeholder="click here to open your keyboard"
+              placeholder="click to open keyboard"
               className="text-white w-[50%] mt-3 p-2"
               onChange={(e) => {
                 setUserTypes(e.target.value);
